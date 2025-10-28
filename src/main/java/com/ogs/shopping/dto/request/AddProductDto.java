@@ -1,8 +1,4 @@
 package com.ogs.shopping.dto.request;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.ogs.shopping.entity.Order;
-import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
