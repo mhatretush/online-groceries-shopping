@@ -1,5 +1,6 @@
 package com.ogs.shopping.service.impl;
 
+import com.ogs.shopping.custom_exception.ResourceNotFoundException;
 import com.ogs.shopping.dto.request.AddProductDto;
 import com.ogs.shopping.dto.response.ProductResponseDto;
 import com.ogs.shopping.entity.Product;
@@ -30,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
         // check if product with same name exists
         productRepository.findByProductName(productDto.getProductName())
                 .ifPresent(product -> {
-                    throw new RuntimeException("Product with name " + productDto.getProductName() + " already exists!");
+                    throw new ResourceNotFoundException("Product with name " + productDto.getProductName() + " already exists!");
                 });
 
         Product newProduct = mapper.map(productDto, Product.class);
@@ -43,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDto updateProduct(Long productId, AddProductDto productDto) {
         // check if product exists
         Product existingProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("No such product exists!"));
+                .orElseThrow(() -> new ResourceNotFoundException("No such product exists!"));
 
         mapper.map(productDto, existingProduct);
         logger.info("Product updated successfully with id : " + productId);
@@ -53,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(Long productId) {
         Product existingProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("No such product exists!"));
+                .orElseThrow(() -> new ResourceNotFoundException("No such product exists!"));
 
         productRepository.delete(existingProduct);
 
@@ -64,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDto findProductById(Long productId) {
         // find the product
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("No such product found!"));
+                .orElseThrow(() -> new ResourceNotFoundException("No such product found!"));
 
         // convert to dto and return
         logger.info("Product found successfully with id : {}", productId);

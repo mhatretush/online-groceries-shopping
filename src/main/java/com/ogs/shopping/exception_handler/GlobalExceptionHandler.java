@@ -43,4 +43,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(rejectedFields);
     }
+
+    //=================================================================================================================
+    //product related exceptions
+    
+
 }
