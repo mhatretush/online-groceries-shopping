@@ -34,6 +34,4 @@ public class OfferClaim {
     @Column(nullable = false)
     private boolean successful;
 
-
-
 }
