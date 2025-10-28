@@ -41,6 +41,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponseDto updateProduct(Long productId, AddProductDto productDto) {
+        // check if product exists
         Product existingProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("No such product exists!"));
 

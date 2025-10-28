@@ -9,7 +9,7 @@ public class AddProductDto {
 
     private String productName;
 
-    private double productPrice;
+    private Double productPrice;
 
     private int productQty;
 
