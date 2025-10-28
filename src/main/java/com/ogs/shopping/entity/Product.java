@@ -1,9 +1,11 @@
 package com.ogs.shopping.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -26,6 +28,8 @@ public class Product {
     @Column(nullable = false)
     private int productQty;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Order> orderList;
+    @ManyToOne()
+    @JoinColumn(name = "order_id", nullable = false)
+    @JsonBackReference
+    private Order order;
 }// Product class ends
