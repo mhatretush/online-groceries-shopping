@@ -1,4 +1,7 @@
 package com.ogs.shopping.repository;
 
-public interface ProductRepository {
-}
+import com.ogs.shopping.entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductRepository extends JpaRepository<Product, Long> {
+}// ProductRepository interface ends
