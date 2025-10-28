@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AddOfferDto {
+public class OffeRequestDto {
     @NotEmpty(message = "the offer code cannot be empty")
     private String code;
 
