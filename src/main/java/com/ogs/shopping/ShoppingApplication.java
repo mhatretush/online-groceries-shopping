@@ -6,6 +6,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class ShoppingApplication {
@@ -14,6 +15,7 @@ public class ShoppingApplication {
         SpringApplication.run(ShoppingApplication.class, args);
     }
 
+    @Bean
     public ModelMapper modelMapper() {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration()

@@ -30,8 +30,4 @@ public class Product {
     @Column(nullable = false)
     private int productQty;
 
-    @ManyToOne()
-    @JoinColumn(name = "order_id", nullable = false)
-    @JsonBackReference
-    private Order order;
 }// Product class ends

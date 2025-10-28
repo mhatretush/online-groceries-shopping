@@ -5,15 +5,19 @@ import com.ogs.shopping.dto.response.ProductResponseDto;
 import com.ogs.shopping.entity.Product;
 import com.ogs.shopping.repository.ProductRepository;
 import com.ogs.shopping.service.ProductService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
+@Transactional
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
