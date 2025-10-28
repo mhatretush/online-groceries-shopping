@@ -32,5 +32,5 @@ public class Order {
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Product> products = new ArrayList<>();
+    private List<OrderItem> orderItems = new ArrayList<>();
 }

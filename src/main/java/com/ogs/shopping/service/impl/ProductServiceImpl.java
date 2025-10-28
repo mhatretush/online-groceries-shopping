@@ -2,46 +2,85 @@ package com.ogs.shopping.service.impl;
 
 import com.ogs.shopping.dto.request.AddProductDto;
 import com.ogs.shopping.dto.response.ProductResponseDto;
+import com.ogs.shopping.entity.Product;
 import com.ogs.shopping.repository.ProductRepository;
 import com.ogs.shopping.service.ProductService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+@Service
+@Transactional
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
-
-    private ProductRepository productRepository;
+    private final ModelMapper mapper;
+    private final ProductRepository productRepository;
 
     @Override
     public ProductResponseDto addProduct(AddProductDto productDto) {
-        logger.info("test");
+        // check if product with same name exists
+        productRepository.findByProductName(productDto.getProductName())
+                .ifPresent(product -> {
+                    throw new RuntimeException("Product with name " + productDto.getProductName() + " already exists!");
+                });
 
-        return null;
+        Product newProduct = mapper.map(productDto, Product.class);
+        productRepository.save(newProduct);
+        logger.info("Product added successfully! with id : " + newProduct.getProductId());
+        return mapper.map(newProduct, ProductResponseDto.class);
     }// addProduct() ends
 
     @Override
     public ProductResponseDto updateProduct(Long productId, AddProductDto productDto) {
-        return null;
+        Product existingProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("No such product exists!"));
+
+        mapper.map(productDto, existingProduct);
+        logger.info("Product updated successfully with id : " + productId);
+        return mapper.map(existingProduct, ProductResponseDto.class);
     }// updateProduct() ends
 
     @Override
     public void deleteProduct(Long productId) {
+        Product existingProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("No such product exists!"));
 
+        productRepository.delete(existingProduct);
+
+        logger.info("Product deleted successfully with id : " + productId);
     }// deleteProduct() ends
 
     @Override
     public ProductResponseDto findProductById(Long productId) {
-        return null;
+        // find the product
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("No such product found!"));
+
+        // convert to dto and return
+        logger.info("Product found successfully with id : {}", productId);
+        return mapper.map(product, ProductResponseDto.class);
     }// findProductById() ends
 
     @Override
     public List<ProductResponseDto> getAllProducts() {
-        return List.of();
+        List<Product> productList = productRepository.findAll();
+        List<ProductResponseDto> productResponseDos = new ArrayList<>();
+        productList.forEach(
+                product -> {
+                    ProductResponseDto responseDto = mapper.map(product, ProductResponseDto.class);
+                    productResponseDos.add(responseDto);
+                });
+
+        return productResponseDos;
     }// getAllProducts() ends
 
 }//ProductServiceImpl class ends
