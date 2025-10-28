@@ -8,6 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 @SpringBootApplication
 public class ShoppingApplication {
 
@@ -24,4 +26,8 @@ public class ShoppingApplication {
         return mapper;
     }// modelMapper() ends
 
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }// ShoppingApplication class ends
