@@ -14,9 +14,9 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderItemId;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id",nullable = false)
-    private Order order;
+//    @ManyToOne
+//    @JoinColumn(name = "order_id",nullable = false)
+//    private Order order;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
@@ -26,6 +26,6 @@ public class OrderItem {
     private int quantity;
 
     @Column(nullable = false)
-    private double priceAtOrder;
+    private Double priceAtOrder;
 
 }// OrderItem class ends
