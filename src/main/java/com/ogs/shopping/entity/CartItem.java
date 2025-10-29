@@ -7,24 +7,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "order_items")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderItem {
+public class CartItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderItemId;
-
-
-=======
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
-
-    private Order order;
+    private Long cartItemId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id", nullable = false)
+    private Cart cart;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
@@ -32,5 +29,6 @@ public class OrderItem {
     private int quantity;
 
     @Column(nullable = false)
-    private Double priceAtOrder;
+    private Double priceAtAddition;
+
 }

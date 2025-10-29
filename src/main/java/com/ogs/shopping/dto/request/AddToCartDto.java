@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AddOrderItemDto {
+public class AddToCartDto {
     @NotNull(message = "please enter userId")
     private Long userId;
     @NotNull(message = "please enter productId")
