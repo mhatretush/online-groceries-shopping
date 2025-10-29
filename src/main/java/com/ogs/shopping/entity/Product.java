@@ -44,4 +44,5 @@ public class Product {
     @Column(nullable = false)
     private LocalDateTime modifiedDateTime;
 
+
 }// Product class ends
