@@ -1,5 +1,6 @@
 package com.ogs.shopping.service.impl;
 
+import com.ogs.shopping.custom_exception.ProductNotFound;
 import com.ogs.shopping.custom_exception.ResourceNotFoundException;
 import com.ogs.shopping.dto.request.AddProductDto;
 import com.ogs.shopping.dto.response.ProductResponseDto;
@@ -44,7 +45,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDto updateProduct(Long productId, AddProductDto productDto) {
         // check if product exists
         Product existingProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("No such product exists!"));
+                .orElseThrow(() -> new ProductNotFound("No such product exists with id :" + productId));
 
         mapper.map(productDto, existingProduct);
         logger.info("Product updated successfully with id : " + productId);
@@ -54,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(Long productId) {
         Product existingProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("No such product exists!"));
+                .orElseThrow(() -> new ProductNotFound("No such product exists with id :" + productId));
 
         productRepository.delete(existingProduct);
 
@@ -65,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDto findProductById(Long productId) {
         // find the product
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("No such product found!"));
+                .orElseThrow(() -> new ProductNotFound("No such product exists with id :" + productId));
 
         // convert to dto and return
         logger.info("Product found successfully with id : {}", productId);

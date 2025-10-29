@@ -1,6 +1,7 @@
 package com.ogs.shopping.exception_handler;
 
 import com.ogs.shopping.custom_exception.ApiException;
+import com.ogs.shopping.custom_exception.ProductNotFound;
 import com.ogs.shopping.custom_exception.ResourceNotFoundException;
 import com.ogs.shopping.dto.response.ApiResponse;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,11 @@ public class GlobalExceptionHandler {
 
     //=================================================================================================================
     //product related exceptions
+    @ExceptionHandler(ProductNotFound.class)
+    public ResponseEntity<com.ogs.shopping.payload.ApiResponse<Void>> handleProductNotFound(ProductNotFound e){
+        com.ogs.shopping.payload.ApiResponse<Void> apiResponse = com.ogs.shopping.payload.ApiResponse.error("No such product found",e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiResponse);
+    }// handleProductNotFound()
     
 
 }
