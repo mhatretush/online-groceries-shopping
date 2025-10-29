@@ -14,11 +14,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-<<<<<<<< HEAD:src/main/java/com/ogs/shopping/dto/request/OffeRequestDto.java
+
 public class OfferRequestDto {
-========
-public class OfferRequestDto {
->>>>>>>> c3c3b29e88886342670a8290dfcb97f4c544c165:src/main/java/com/ogs/shopping/dto/request/OfferRequestDto.java
+
+
+
     @NotEmpty(message = "the offer code cannot be empty")
     private String code;
 

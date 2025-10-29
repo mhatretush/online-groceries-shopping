@@ -13,7 +13,7 @@ public interface OfferService {
 
 
     public OfferResponseDto createOffer(OfferRequestDto dto);
-    public Offer getOfferById(Long offerId);
+    public OfferResponseDto getOfferById(Long offerId);
     public OfferResponseDto updateOffer(Long offerId, OfferRequestDto dto);
     public void deleteOffer(Long offerId);
     public boolean isOfferValid(String code);
