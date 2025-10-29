@@ -2,10 +2,9 @@ package com.ogs.shopping.controller;
 
 import com.ogs.shopping.dto.request.OfferRequestDto;
 import com.ogs.shopping.dto.response.OfferResponseDto;
-import com.ogs.shopping.entity.Offer;
 import com.ogs.shopping.service.OfferService;
 
-import lombok.Builder;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +13,8 @@ import java.lang.reflect.Method;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/offer")
-@Builder
+@RequestMapping(value = "/api/offer",produces = "application/json")
+
 public class OfferController {
     private final OfferService offerService;
 
@@ -26,25 +25,25 @@ public class OfferController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Offer> getOfferById(@PathVariable Long id ){
-        Offer offer=offerService.getOfferById(id);
+    public ResponseEntity<OfferResponseDto> getOfferById(@PathVariable Long id ){
+        OfferResponseDto offer=offerService.getOfferById(id);
 
         return ResponseEntity.ok(offer);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{offerId}")
     public ResponseEntity<OfferResponseDto> updteOffer(@PathVariable Long offerId, @RequestBody OfferRequestDto dto){
         OfferResponseDto offer=offerService.updateOffer(offerId,dto);
         return ResponseEntity.ok(offer);
     }
 
-    @DeleteMapping("/validate/{code}")
+    @DeleteMapping("/{offerId}")
     public ResponseEntity<String> deleteOffer(@PathVariable Long offerId){
         offerService.deleteOffer(offerId);
         return ResponseEntity.ok("the offer has been deleted successfully");
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/validate/{code}")
     public ResponseEntity<Boolean> isOfferValid(@PathVariable String code){
        boolean valid =offerService.isOfferValid(code);
        return  ResponseEntity.ok(valid);

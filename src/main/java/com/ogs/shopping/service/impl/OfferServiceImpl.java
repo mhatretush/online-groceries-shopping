@@ -39,10 +39,11 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Offer getOfferById(Long offerId) {
+    public OfferResponseDto getOfferById(Long offerId) {
 
-        return   offerRepository.findById(offerId)
-                .orElseThrow(()->new RuntimeException("offer not found") );
+        Offer offer = offerRepository.findById(offerId)
+                .orElseThrow(() -> new RuntimeException("Offer not found"));
+        return mapper.map(offer, OfferResponseDto.class);
 
 
     }
@@ -53,7 +54,7 @@ public class OfferServiceImpl implements OfferService {
 
         Offer offer = offerRepository.findById(offerId)
                 .orElseThrow(() -> new RuntimeException("Offer not found"));
-       mapper.map(offer,Offer.class);
+       mapper.map(dto,offer);
        Offer updatedOffer=offerRepository.save(offer);
         return mapper.map(updatedOffer,OfferResponseDto.class);
     }
