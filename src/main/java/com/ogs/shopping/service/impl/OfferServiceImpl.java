@@ -1,11 +1,11 @@
 package com.ogs.shopping.service.impl;
 
-<<<<<<< HEAD
-import com.ogs.shopping.dto.request.OffeRequestDto;
-=======
+
+import com.ogs.shopping.dto.request.OfferRequestDto;
+
 import com.ogs.shopping.dto.request.OfferRequestDto;
 import com.ogs.shopping.dto.request.OfferRequestDto;
->>>>>>> c3c3b29e88886342670a8290dfcb97f4c544c165
+
 import com.ogs.shopping.dto.response.OfferResponseDto;
 import com.ogs.shopping.entity.DiscountType;
 import com.ogs.shopping.entity.Offer;
@@ -27,15 +27,11 @@ public class OfferServiceImpl implements OfferService {
     private final OfferRepository offerRepository;
 
     private final ModelMapper mapper;
-<<<<<<< HEAD
-    @Override
-    public OfferResponseDto createOffer(OffeRequestDto dto) {
-=======
-
 
     @Override
+
     public OfferResponseDto createOffer(OfferRequestDto dto) {
->>>>>>> c3c3b29e88886342670a8290dfcb97f4c544c165
+
         Offer offer=mapper.map( dto, Offer.class);
         offer.setValid(true);
         offerRepository.save(offer);
@@ -52,11 +48,9 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-<<<<<<< HEAD
-    public OfferResponseDto updateOffer(Long offerId, OffeRequestDto dto) {
-=======
+
     public OfferResponseDto updateOffer(Long offerId, OfferRequestDto dto) {
->>>>>>> c3c3b29e88886342670a8290dfcb97f4c544c165
+
         Offer offer = offerRepository.findById(offerId)
                 .orElseThrow(() -> new RuntimeException("Offer not found"));
        mapper.map(offer,Offer.class);
