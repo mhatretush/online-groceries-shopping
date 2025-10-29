@@ -7,11 +7,10 @@ import java.util.List;
 
 @Getter
 @Setter
-public class OrderResponseDto {
-    private Long orderId;
+public class CartResponseDto {
+    private Long cartId;
     private Long userId;
+    private List<CartItemResponseDto> items;
+
     private Double totalAmount;
-    private Double discountAmount;
-    private Double payableAmount;
-    private List<OrderItemResponseDto> orderItems;
 }

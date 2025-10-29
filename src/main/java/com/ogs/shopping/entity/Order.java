@@ -22,15 +22,15 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
 
-    private double totalAmount;
-    private double discountAmount;
-    private double payableAmount;
+    private Double totalAmount;
+    private Double discountAmount;
+    private Double payableAmount;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     private User user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 }

@@ -30,4 +30,5 @@ public class Product {
     @Column(nullable = false)
     private int productQty;
 
+
 }// Product class ends
