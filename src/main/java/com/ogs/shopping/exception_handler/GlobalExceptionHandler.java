@@ -47,6 +47,7 @@ public class GlobalExceptionHandler {
 
     //=================================================================================================================
     //product related exceptions
+
     @ExceptionHandler(ProductNotFound.class)
     public ResponseEntity<com.ogs.shopping.payload.ApiResponse<Void>> handleProductNotFound(ProductNotFound e){
         com.ogs.shopping.payload.ApiResponse<Void> apiResponse = com.ogs.shopping.payload.ApiResponse.error("No such product found",e.getMessage());

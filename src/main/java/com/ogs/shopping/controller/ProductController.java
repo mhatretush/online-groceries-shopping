@@ -4,6 +4,7 @@ import com.ogs.shopping.dto.request.AddProductDto;
 import com.ogs.shopping.dto.response.ProductResponseDto;
 import com.ogs.shopping.payload.ApiResponse;
 import com.ogs.shopping.service.impl.ProductServiceImpl;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
