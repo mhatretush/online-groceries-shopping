@@ -1,9 +1,16 @@
 package com.ogs.shopping.dto.response;
 
 import com.ogs.shopping.entity.DiscountType;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
+@Getter
+@Setter
+@RequiredArgsConstructor
 public class OfferResponseDto {
 
     private Long offerId;
