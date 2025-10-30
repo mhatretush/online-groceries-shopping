@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/product")
 @RequiredArgsConstructor
@@ -44,6 +47,22 @@ public class ProductController {
     @GetMapping("/{productId}")
     public ResponseEntity<ApiResponse<ProductResponseDto>> getProductById(@PathVariable Long productId) {
         ProductResponseDto productResponseDto = productService.findProductById(productId);
+
+        // add HATEOAS links
+        // link to self
+        productResponseDto.add(
+                linkTo(methodOn(ProductController.class).getProductById(productId)).withRel("Link to self")
+        );
+        // link to getAllProducts()
+        productResponseDto.add(
+                linkTo(methodOn(ProductController.class).getAllProducts()).withRel("get-all-products")
+        );
+
+        // link to deleteProduct()
+        productResponseDto.add(
+                linkTo(methodOn(ProductController.class).deleteProduct(productId)).withRel("delete-product")
+        );
+
         return ResponseEntity.ok(ApiResponse.success("Product fetched successfully",productResponseDto));
     }// getProductById() ends
 
