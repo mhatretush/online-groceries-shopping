@@ -33,6 +33,6 @@ public class Offer {
     @Column(nullable = false)
     private DiscountType discountType;
 
-     private boolean valid;
+    private boolean valid;
 
 }

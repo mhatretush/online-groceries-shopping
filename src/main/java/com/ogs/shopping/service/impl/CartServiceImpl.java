@@ -14,6 +14,7 @@ import com.ogs.shopping.repository.CartRepository;
 import com.ogs.shopping.repository.ProductRepository;
 import com.ogs.shopping.repository.UserRepository;
 import com.ogs.shopping.service.CartService;
+import com.ogs.shopping.utils.CartMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class CartServiceImpl implements CartService {
     private final ModelMapper modelMapper;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final CartMapper cartMapper;
 
     @Override
     public CartResponseDto addToCart(AddToCartDto addToCartDto) {
@@ -70,27 +72,7 @@ public class CartServiceImpl implements CartService {
         }
 
         cart = cartRepository.save(cart);
-
-        // Convert to DTO manually
-        CartResponseDto response = new CartResponseDto();
-        response.setCartId(cart.getCartId());
-        response.setUserId(cart.getUser().getUserId());
-
-        List<CartItemResponseDto> itemDtos = cart.getItems().stream().map(item -> {
-            CartItemResponseDto dto = new CartItemResponseDto();
-            dto.setCartItemId(item.getCartItemId());
-            dto.setProductId(item.getProduct().getProductId());
-            dto.setProductName(item.getProduct().getProductName());
-            dto.setProductPrice(item.getProduct().getProductPrice());
-            dto.setQuantity(item.getQuantity());
-            dto.setTotalPrice(item.getQuantity() * item.getProduct().getProductPrice());
-            return dto;
-        }).toList();
-
-        response.setItems(itemDtos);
-        response.setTotalAmount(itemDtos.stream().mapToDouble(CartItemResponseDto::getTotalPrice).sum());
-
-        return response;
+        return cartMapper.toCartResponseDto(cart);
     }
 
 
@@ -112,23 +94,8 @@ public class CartServiceImpl implements CartService {
         cart.getItems().remove(removeCartItem);
         cart = cartRepository.save(cart);
 
-        //Map to dto
-        List<CartItemResponseDto> itemResponseDtos = cart.getItems().stream().map(item->{
-            CartItemResponseDto dto = new CartItemResponseDto();
-            dto.setCartItemId(item.getCartItemId());
-            dto.setProductId(item.getProduct().getProductId());
-            dto.setProductName(item.getProduct().getProductName());
-            dto.setProductPrice(item.getProduct().getProductPrice());
-            dto.setQuantity(item.getQuantity());
-            dto.setTotalPrice(item.getQuantity() * item.getProduct().getProductPrice());
-            return dto;
-        }).toList();
+        CartResponseDto response =  cartMapper.toCartResponseDto(cart);
 
-        CartResponseDto response = new CartResponseDto();
-        response.setCartId(cart.getCartId());
-        response.setUserId(cart.getUser().getUserId());
-        response.setItems(itemResponseDtos);
-        response.setTotalAmount(itemResponseDtos.stream().mapToDouble(CartItemResponseDto::getTotalPrice).sum());
         return  new ApiResponse("success");
     }
 
@@ -139,24 +106,7 @@ public class CartServiceImpl implements CartService {
 
         Cart cart = cartRepository.findByUser(user)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
-
-        List<CartItemResponseDto> itemResponseDtos = cart.getItems().stream().map(item ->{
-            CartItemResponseDto dto = new CartItemResponseDto();
-            dto.setCartItemId(item.getCartItemId());
-            dto.setProductId(item.getProduct().getProductId());
-            dto.setProductName(item.getProduct().getProductName());
-            dto.setProductPrice(item.getProduct().getProductPrice());
-            dto.setQuantity(item.getQuantity());
-            dto.setTotalPrice(item.getQuantity() * item.getProduct().getProductPrice());
-            return dto;
-        }).toList();
-
-        CartResponseDto response = new CartResponseDto();
-        response.setCartId(cart.getCartId());
-        response.setUserId(cart.getUser().getUserId());
-        response.setItems(itemResponseDtos);
-        response.setTotalAmount(itemResponseDtos.stream().mapToDouble(CartItemResponseDto::getTotalPrice).sum());
-        return  response;
+        return  cartMapper.toCartResponseDto(cart);
 
     }
 }

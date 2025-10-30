@@ -8,6 +8,7 @@ import com.ogs.shopping.repository.CartRepository;
 import com.ogs.shopping.repository.OrderRepository;
 import com.ogs.shopping.repository.UserRepository;
 import com.ogs.shopping.service.OrderService;
+import com.ogs.shopping.utils.OrderMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class OrderServiceImpl implements OrderService {
     private ModelMapper modelMapper;
     private UserRepository userRepository;
     private CartRepository cartRepository;
+    private OrderMapper orderMapper;
 
     @Override
     public OrderResponseDto placeOrder(Long userId) {
@@ -31,7 +33,6 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(()->{
                    throw new ResourceNotFoundException("Order Not Found");
                 });
-
         Cart cart = cartRepository.findByUser(user)
                 .orElseThrow(()->{
                     throw new ResourceNotFoundException("Cart Not Found");
@@ -41,57 +42,13 @@ public class OrderServiceImpl implements OrderService {
             throw new ResourceNotFoundException("Cart is Empty cannot place Order");
         }
 
-        Order order = new Order();
-        order.setUser(user);
-
-        Double total = 0.0;
-
-        List<OrderItem> orderItems = new ArrayList<>();
-
-        for (CartItem cartItem : cart.getItems()) {
-            OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(order);
-            orderItem.setProduct(cartItem.getProduct());
-            orderItem.setQuantity(cartItem.getQuantity());
-            orderItem.setPriceAtOrder(cartItem.getProduct().getProductPrice()); // ✅ FIXED
-
-            Double itemTotal = cartItem.getProduct().getProductPrice()*cartItem.getQuantity();
-            total += itemTotal;
-
-            orderItems.add(orderItem);
-        }
-
-        order.setOrderItems(orderItems);
-        order.setTotalAmount(total);
-        order.setDiscountAmount(0.0);
-        order.setPayableAmount(total);
-
+        Order order = orderMapper.toOrder(user, cart.getItems());
         Order savedOrder = orderRepository.save(order);
 
         cart.getItems().clear();
         cartRepository.save(cart);
 
-        List<OrderItemResponseDto>  orderItemResponseDtos = savedOrder.getOrderItems().stream().map(item->{
-            OrderItemResponseDto orderItemResponseDto = new OrderItemResponseDto();
-            orderItemResponseDto.setOrderItemId(item.getOrderItemId());
-            orderItemResponseDto.setProductId(item.getProduct().getProductId());
-            orderItemResponseDto.setQuantity(item.getQuantity());
-            orderItemResponseDto.setProductName(item.getProduct().getProductName());
-            orderItemResponseDto.setPriceAtOrder(item.getPriceAtOrder());
-            orderItemResponseDto.setTotalPrice(item.getQuantity()*item.getProduct().getProductPrice());
-            return orderItemResponseDto;
-
-
-        }).toList();
-
-        OrderResponseDto response = new OrderResponseDto();
-        response.setOrderId(savedOrder.getOrderId());
-        response.setUserId(user.getUserId());
-        response.setTotalAmount(savedOrder.getTotalAmount());
-        response.setDiscountAmount(savedOrder.getDiscountAmount());
-        response.setPayableAmount(savedOrder.getPayableAmount());
-        response.setOrderItems(orderItemResponseDtos);
-
+        OrderResponseDto response = orderMapper.toOrderResponseDto(savedOrder);
         return response;
     }
 
@@ -101,8 +58,9 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(()->{
                     throw new ResourceNotFoundException("Order Not Found");
                 });
-        return modelMapper.map(order, OrderResponseDto.class);
+        return orderMapper.toOrderResponseDto(order);
     }
+
 
     @Override
     public List<OrderResponseDto> getUserOrders(Long userId) {
@@ -110,10 +68,9 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(()->{
                     throw new ResourceNotFoundException("Order Not Found");
                 });
-        return orderRepository.findByUser(user)
+        return orderRepository.findByUserOrderByOrderDateDesc(user)
                 .stream()
-                .map(u->{
-                    return modelMapper.map(u, OrderResponseDto.class);
-                }).toList();
+                .map(orderMapper::toOrderResponseDto)
+                .toList();
     }
 }
