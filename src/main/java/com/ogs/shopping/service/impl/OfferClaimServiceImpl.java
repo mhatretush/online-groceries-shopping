@@ -1,8 +1,6 @@
 package com.ogs.shopping.service.impl;
 
 import com.ogs.shopping.dto.response.OfferClaimResponseDto;
-import com.ogs.shopping.dto.response.OfferResponseDto;
-import com.ogs.shopping.dto.response.UserResponseDto;
 import com.ogs.shopping.entity.Offer;
 import com.ogs.shopping.entity.OfferClaim;
 import com.ogs.shopping.entity.User;
@@ -15,8 +13,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.PrivateKey;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -27,25 +26,23 @@ public class OfferClaimServiceImpl implements OfferClaimService {
     private final OfferRepository offerRepository;
     private final ModelMapper mapper;
     @Override
-    public OfferClaimResponseDto claimOffer(Long id, String code) {
-        User user= userRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("user does not exist by this id "));
+    public OfferClaimResponseDto claimOffer(Long userId, String offerCode) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Offer offer= offerRepository.findByCode(code)
-                .orElseThrow(()->new RuntimeException("offer code is not valid "));
+        Offer offer = offerRepository.findByCode(offerCode)
+                .orElseThrow(() -> new RuntimeException("Offer not found with code: " + offerCode));
 
-        LocalDate today=LocalDate.now();
-        boolean isValid= offer.isValid() &&
-                (offer.getValidFrom().isBefore(today) ||offer.getValidFrom().isEqual(today) ) &&
-                (offer.getValidTill().isAfter(today) || offer.getValidTill().isAfter(today));
-
-
-        if (!isValid) {
-            throw new RuntimeException("Offer is expired or invalid.");
+        // Check offer validity
+        LocalDate today = LocalDate.now();
+        if (today.isBefore(offer.getValidFrom()) || today.isAfter(offer.getValidTill()) || !offer.isValid()) {
+            throw new RuntimeException("Offer is expired or inactive");
         }
 
-        if (offerClaimRepository.existsByUserAndOffer(user, offer)) {
-            throw new RuntimeException("You have already claimed this offer.");
+        // Check if user already claimed
+        boolean alreadyClaimed = offerClaimRepository.existsByUserAndOffer(user, offer);
+        if (alreadyClaimed) {
+            throw new RuntimeException("User has already claimed this offer");
         }
 
         OfferClaim offerClaim = OfferClaim.builder()
@@ -55,11 +52,43 @@ public class OfferClaimServiceImpl implements OfferClaimService {
                 .successful(true)
                 .build();
 
+        offerClaimRepository.save(offerClaim);
 
-        OfferClaim savedClaim = offerClaimRepository.save(offerClaim);
-
-        return mapper.map(savedClaim, OfferClaimResponseDto.class);
-
-       
+        return mapper.map(offerClaim, OfferClaimResponseDto.class);
     }
+
+    // ✅ Get all claims made by a user
+    @Override
+    public List<OfferClaimResponseDto> getClaimsByUser(Long userId) {
+        List<OfferClaim> claims = offerClaimRepository.findByUser_UserId(userId);
+        return claims.stream()
+                .map(claim -> mapper.map(claim, OfferClaimResponseDto.class))
+                .collect(Collectors.toList());
+    }
+
+    // ✅ Get all claims for a specific offer
+    @Override
+    public List<OfferClaimResponseDto> getClaimsByOffer(Long offerId) {
+        List<OfferClaim> claims = offerClaimRepository.findByOffer_OfferId(offerId);
+        return claims.stream()
+                .map(claim -> mapper.map(claim, OfferClaimResponseDto.class))
+                .collect(Collectors.toList());
+    }
+
+    // ✅ Get claim by ID
+    @Override
+    public OfferClaimResponseDto getClaimById(Long claimId) {
+        OfferClaim claim = offerClaimRepository.findById(claimId)
+                .orElseThrow(() -> new RuntimeException("Claim not found"));
+        return mapper.map(claim, OfferClaimResponseDto.class);
+    }
+
+
+    @Override
+    public void deleteClaim(Long claimId) {
+        OfferClaim claim = offerClaimRepository.findById(claimId)
+                .orElseThrow(() -> new RuntimeException("Claim not found"));
+        offerClaimRepository.delete(claim);
+    }
+
 }
