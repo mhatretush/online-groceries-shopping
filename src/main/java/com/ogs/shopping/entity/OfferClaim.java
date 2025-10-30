@@ -2,7 +2,7 @@ package com.ogs.shopping.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
+
 
 import java.time.LocalDate;
 
