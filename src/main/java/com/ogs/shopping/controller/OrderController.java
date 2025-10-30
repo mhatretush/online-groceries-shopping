@@ -1,6 +1,7 @@
 package com.ogs.shopping.controller;
 
 import com.ogs.shopping.dto.request.AddToCartDto;
+import com.ogs.shopping.dto.response.OrderResponseDto;
 import com.ogs.shopping.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,9 @@ public class OrderController {
 
     @GetMapping("/view/{orderId}")
     public ResponseEntity<?> viewOrder(Long orderId) {
+
+        OrderResponseDto orderResponseDto = orderService.viewOrder(orderId);
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(orderService.viewOrder(orderId));
     }
