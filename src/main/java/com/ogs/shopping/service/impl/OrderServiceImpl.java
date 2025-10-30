@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setUser(user);
 
-        Double total = 0.0;
+        double total = 0.0;
 
         List<OrderItem> orderItems = new ArrayList<>();
 
@@ -80,8 +80,6 @@ public class OrderServiceImpl implements OrderService {
             orderItemResponseDto.setPriceAtOrder(item.getPriceAtOrder());
             orderItemResponseDto.setTotalPrice(item.getQuantity()*item.getProduct().getProductPrice());
             return orderItemResponseDto;
-
-
         }).toList();
 
         OrderResponseDto response = new OrderResponseDto();
@@ -101,7 +99,26 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(()->{
                     throw new ResourceNotFoundException("Order Not Found");
                 });
-        return modelMapper.map(order, OrderResponseDto.class);
+
+        List<OrderItemResponseDto> orderItemResponseDtos = order.getOrderItems().stream().map(item->{
+            OrderItemResponseDto dto = new OrderItemResponseDto();
+            dto.setOrderItemId(item.getOrderItemId());
+            dto.setProductId(item.getProduct().getProductId());
+            dto.setProductName(item.getProduct().getProductName());
+            dto.setPriceAtOrder(item.getPriceAtOrder());
+            dto.setQuantity(item.getQuantity());
+            dto.setTotalPrice(item.getQuantity()*item.getProduct().getProductPrice());
+            return dto;
+        }).toList();
+
+        OrderResponseDto response = new OrderResponseDto();
+        response.setOrderId(order.getOrderId());
+        response.setUserId(order.getUser().getUserId());
+        response.setTotalAmount(order.getTotalAmount());
+        response.setDiscountAmount(order.getDiscountAmount());
+        response.setPayableAmount(order.getPayableAmount());
+        response.setOrderItems(orderItemResponseDtos);
+        return response;
     }
 
     @Override

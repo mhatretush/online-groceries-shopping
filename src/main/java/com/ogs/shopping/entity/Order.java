@@ -31,12 +31,6 @@ public class Order {
     @JsonBackReference
     private User user;
 
-
-
-
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-
-
-
     private List<OrderItem> orderItems = new ArrayList<>();
 }
