@@ -11,6 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +30,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
+    @CachePut(value = "products", key = "#result.productId")
+    @CacheEvict(value = "allProducts",  allEntries = true)
     public ProductResponseDto addProduct(AddProductDto productDto) {
         logger.debug("Adding product {}", productDto);
         // check if product with same name exists
@@ -41,6 +47,10 @@ public class ProductServiceImpl implements ProductService {
     }// addProduct() ends
 
     @Override
+    @Caching(
+            put = @CachePut(value = "product", key = "#productId"),
+            evict = @CacheEvict(value = "allProducts", allEntries = true)
+    )
     public ProductResponseDto updateProduct(Long productId, AddProductDto productDto) {
         logger.debug("Updating product {}", productId);
         // check if product exists
@@ -53,6 +63,12 @@ public class ProductServiceImpl implements ProductService {
     }// updateProduct() ends
 
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "products", key = "#productId"),
+                    @CacheEvict(value = "allProducts", allEntries = true)
+            }
+    )
     public void deleteProduct(Long productId) {
         logger.debug("Deleting product {}", productId);
         Product existingProduct = productRepository.findById(productId)
@@ -64,6 +80,7 @@ public class ProductServiceImpl implements ProductService {
     }// deleteProduct() ends
 
     @Override
+    @Cacheable(value = "products", key = "#productId")
     public ProductResponseDto findProductById(Long productId) {
         logger.debug("Finding product with id {}", productId);
         // find the product
@@ -76,6 +93,7 @@ public class ProductServiceImpl implements ProductService {
     }// findProductById() ends
 
     @Override
+    @Cacheable(value = "allProducts")
     public List<ProductResponseDto> getAllProducts() {
         logger.debug("Getting all products");
         List<Product> productList = productRepository.findAll();
