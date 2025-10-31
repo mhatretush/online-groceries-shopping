@@ -2,6 +2,7 @@ package com.ogs.shopping.service.impl;
 
 import com.ogs.shopping.custom_exception.ApiException;
 import com.ogs.shopping.custom_exception.ResourceNotFoundException;
+import com.ogs.shopping.dto.response.ApiResponse;
 import com.ogs.shopping.dto.response.OrderItemResponseDto;
 import com.ogs.shopping.dto.response.OrderResponseDto;
 import com.ogs.shopping.entity.*;
@@ -153,5 +154,29 @@ public class OrderServiceImpl implements OrderService {
                 .map(orderMapper::toOrderResponseDto)
                 .toList();
     }
+
+    @Override
+    public ApiResponse updateOrderStatus(Long orderId, OrderStatus newStatus) {
+        // Fetch the order
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
+
+        // Optional: Validation logic
+        if (order.getStatus() == OrderStatus.DELIVERED) {
+            throw new ApiException("Order already delivered. Status cannot be changed.");
+        }
+
+        if (order.getStatus() == newStatus) {
+            throw new ApiException("Order already in status: " + newStatus);
+        }
+
+        // Update status
+        order.setStatus(newStatus);
+        order.setModifiedDate(LocalDate.now());
+        orderRepository.save(order);
+
+        return new ApiResponse("Order status updated to: " + newStatus);
+    }
+
 
 }
