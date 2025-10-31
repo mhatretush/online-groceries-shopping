@@ -1,6 +1,5 @@
 package com.ogs.shopping.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.hateoas.RepresentationModel;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,10 +35,10 @@ public class Order extends RepresentationModel<Order> {
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
-    private LocalDateTime orderDate;
+    private LocalDate orderDate;
 
     @UpdateTimestamp
-    private LocalDateTime modifiedDate;
+    private LocalDate modifiedDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

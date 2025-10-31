@@ -7,7 +7,7 @@ import java.util.List;
 public interface OrderService {
 
     //Order Product
-    OrderResponseDto placeOrder(Long userId);
+    OrderResponseDto placeOrder(Long userId, String offerCode);
     OrderResponseDto viewOrder(Long orderId);
     List<OrderResponseDto> getUserOrders(Long userId);
 }

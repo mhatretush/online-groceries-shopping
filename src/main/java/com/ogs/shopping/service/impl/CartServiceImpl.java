@@ -6,13 +6,8 @@ import com.ogs.shopping.dto.request.AddToCartDto;
 import com.ogs.shopping.dto.response.ApiResponse;
 import com.ogs.shopping.dto.response.CartItemResponseDto;
 import com.ogs.shopping.dto.response.CartResponseDto;
-import com.ogs.shopping.entity.Cart;
-import com.ogs.shopping.entity.CartItem;
-import com.ogs.shopping.entity.Product;
-import com.ogs.shopping.entity.User;
-import com.ogs.shopping.repository.CartRepository;
-import com.ogs.shopping.repository.ProductRepository;
-import com.ogs.shopping.repository.UserRepository;
+import com.ogs.shopping.entity.*;
+import com.ogs.shopping.repository.*;
 import com.ogs.shopping.service.CartService;
 import com.ogs.shopping.utils.CartMapper;
 import lombok.AllArgsConstructor;
@@ -20,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -32,6 +28,8 @@ public class CartServiceImpl implements CartService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final CartMapper cartMapper;
+    private final OfferRepository offerRepository;
+    private final OfferClaimRepository offerClaimRepository;
 
     @Override
     public CartResponseDto addToCart(AddToCartDto addToCartDto) {
@@ -108,5 +106,56 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
         return  cartMapper.toCartResponseDto(cart);
 
+    }
+
+    @Override
+    public CartResponseDto applyDiscount(Long userId, String offerCode) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()->{
+                    throw new ResourceNotFoundException("User not found");
+                });
+
+        Cart cart = cartRepository.findByUser(user)
+                .orElseThrow(()->{
+                    throw new ResourceNotFoundException("Cart not found");
+                });
+
+        Offer offer = offerRepository.findByCode(offerCode)
+                .orElseThrow(()->{
+                    throw new ResourceNotFoundException("Offer not found");
+                });
+
+        LocalDate today = LocalDate.now();
+        if(!offer.isValid() || today.isBefore(offer.getValidFrom()))
+        {
+            throw new ApiException("Offer is not valid");
+        }
+
+        boolean alreadyClaimed = offerClaimRepository.existsByUserAndOffer(user, offer);
+        if(alreadyClaimed){
+            throw new ApiException("Offer is already claimed");
+        }
+
+        double totalAmt = cart.getItems().stream()
+                .mapToDouble(item->item.getQuantity()*item.getProduct().getProductPrice())
+                .sum();
+
+        double discountAmount = 0.0;
+        if(offer.getDiscountType() == DiscountType.FLAT){
+            discountAmount = offer.getDiscount();
+        }else if(offer.getDiscountType()==DiscountType.PERCENTAGE){
+            discountAmount = totalAmt * (offer.getDiscount()/100.0);
+        }
+
+        double finalAmount = Math.max(0, totalAmt-discountAmount);
+
+        CartResponseDto response = cartMapper.toCartResponseDto(cart);
+        response.setTotalAmount(totalAmt);
+        response.setDiscountApplied(true);
+        response.setDiscountAmount(discountAmount);
+        response.setFinalAmount(finalAmount);
+        response.setOfferCode(offerCode);
+
+        return response;
     }
 }

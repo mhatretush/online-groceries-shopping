@@ -18,9 +18,9 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/place/{userId}")
-    public ResponseEntity<?> placeOrder(@PathVariable Long userId) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(orderService.placeOrder(userId));
+    public ResponseEntity<?> placeOrder(@PathVariable Long userId, String offerCode) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(orderService.placeOrder(userId, offerCode));
     }
 
     @GetMapping("/view/{orderId}")
