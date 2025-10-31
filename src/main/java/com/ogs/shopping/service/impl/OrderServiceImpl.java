@@ -31,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
     private final PublicHolidayService publicHolidayService;
     private final OfferRepository offerRepository;
     private final OfferClaimRepository offerClaimRepository;
-
+    private final ProductRepository productRepository;
 
     @Override
     public OrderResponseDto placeOrder(Long userId, String offerCode) {
@@ -104,6 +104,18 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatus.PENDING);
 
         Order savedOrder = orderRepository.save(order);
+
+        for(OrderItem item : savedOrder.getOrderItems()){
+            Product product = item.getProduct();
+            int remainingQty = product.getProductQty()-item.getQuantity();
+
+            if(remainingQty < 0){
+                throw new ApiException("Insufficient stock for product");
+            }
+
+            product.setProductQty(remainingQty);
+            productRepository.save(product);
+        }
 
         cart.getItems().clear();
         cartRepository.save(cart);
