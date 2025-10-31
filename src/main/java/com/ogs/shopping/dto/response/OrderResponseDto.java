@@ -1,8 +1,11 @@
 package com.ogs.shopping.dto.response;
 
+import com.ogs.shopping.entity.OrderStatus;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -13,5 +16,12 @@ public class OrderResponseDto {
     private Double totalAmount;
     private Double discountAmount;
     private Double payableAmount;
+    private OrderStatus status;
+    private LocalDate createdDateTime;
+    private LocalDate modifiedDateTime;
     private List<OrderItemResponseDto> orderItems;
+
+    private String offerCode;
+    String discountType;
+    private boolean offerApplied;
 }

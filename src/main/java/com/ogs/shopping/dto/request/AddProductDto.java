@@ -20,6 +20,6 @@ public class AddProductDto {
 
     @NotNull(message = "Product quantity is required.")
     @Min(value = 0, message = "Quantity must be positive.")
-    private int productQty;
+    private Integer productQty;
 
 }// AddProductDto class ends

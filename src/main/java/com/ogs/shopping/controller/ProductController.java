@@ -4,7 +4,7 @@ import com.ogs.shopping.dto.request.AddProductDto;
 import com.ogs.shopping.dto.response.ProductResponseDto;
 import com.ogs.shopping.payload.ApiResponse;
 import com.ogs.shopping.service.impl.ProductServiceImpl;
-import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +24,14 @@ public class ProductController {
 
     // add product
     @PostMapping
-    public ResponseEntity<ApiResponse<ProductResponseDto>> addProduct(@RequestBody AddProductDto newProduct) {
+    public ResponseEntity<ApiResponse<ProductResponseDto>> addProduct(@Valid @RequestBody AddProductDto newProduct) {
         ProductResponseDto productResponseDto = productService.addProduct(newProduct);
         return new ResponseEntity<>(ApiResponse.success("Product added successfully",productResponseDto),HttpStatus.CREATED);
     }// addProduct() ends
 
     // update product
     @PutMapping("/{productId}")
-    public ResponseEntity<ApiResponse<ProductResponseDto>> updateProduct(@PathVariable Long productId, AddProductDto productDto) {
+    public ResponseEntity<ApiResponse<ProductResponseDto>> updateProduct(@Valid @PathVariable Long productId, AddProductDto productDto) {
         ProductResponseDto productResponseDto = productService.updateProduct(productId,productDto);
         return ResponseEntity.ok(ApiResponse.success("Product updated successfully",productResponseDto));
     }// updateProduct() ends
@@ -55,7 +55,7 @@ public class ProductController {
         );
         // link to getAllProducts()
         productResponseDto.add(
-                linkTo(methodOn(ProductController.class).getAllProducts()).withRel("get-all-products")
+                linkTo(methodOn(ProductController.class).getAllProducts()).withSelfRel()
         );
 
         // link to deleteProduct()
