@@ -31,3 +31,66 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# ==================
+# BACKEND (Java/Spring Boot)
+# ==================
+target/
+.classpath
+.project
+.settings/
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# Maven
+dependency-reduced-pom.xml
+.m2/
+.mvn/
+
+# ==================
+# FRONTEND (React)
+# ==================
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# ==================
+# IDE & Editors
+# ==================
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*~
+.DS_Store
+Thumbs.db
+
+# ==================
+# OS
+# ==================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==================
+# Logs
+# ==================
+*.log
+logs/
+*.gz
+
+# ==================
+# Environment files
+# ==================
+.env
+.env.local
+.env.*.local
