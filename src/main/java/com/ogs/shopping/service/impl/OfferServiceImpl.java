@@ -9,6 +9,7 @@ import com.ogs.shopping.dto.request.OfferRequestDto;
 import com.ogs.shopping.dto.response.OfferResponseDto;
 import com.ogs.shopping.entity.DiscountType;
 import com.ogs.shopping.entity.Offer;
+import com.ogs.shopping.payload.ApiResponse;
 import com.ogs.shopping.repository.OfferRepository;
 import com.ogs.shopping.service.OfferService;
 import jakarta.transaction.Transactional;

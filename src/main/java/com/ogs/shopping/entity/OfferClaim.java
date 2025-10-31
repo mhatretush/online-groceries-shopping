@@ -7,9 +7,7 @@ import org.hibernate.annotations.Fetch;
 import java.time.LocalDate;
 
 @Entity
-@Table(name="offerClaims", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"user_id", "offer_id"})
-})
+@Table(name="offerClaims")
 @Getter
 @Setter
 @AllArgsConstructor

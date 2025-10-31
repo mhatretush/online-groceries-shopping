@@ -33,18 +33,19 @@ public class OfferClaimServiceImpl implements OfferClaimService {
         Offer offer = offerRepository.findByCode(offerCode)
                 .orElseThrow(() -> new RuntimeException("Offer not found with code: " + offerCode));
 
-        // Check offer validity
+
         LocalDate today = LocalDate.now();
         if (today.isBefore(offer.getValidFrom()) || today.isAfter(offer.getValidTill()) || !offer.isValid()) {
             throw new RuntimeException("Offer is expired or inactive");
         }
 
-        // Check if user already claimed
+
         boolean alreadyClaimed = offerClaimRepository.existsByUserAndOffer(user, offer);
         if (alreadyClaimed) {
             throw new RuntimeException("User has already claimed this offer");
         }
 
+        // ✅ Create claim
         OfferClaim offerClaim = OfferClaim.builder()
                 .user(user)
                 .offer(offer)
@@ -57,7 +58,8 @@ public class OfferClaimServiceImpl implements OfferClaimService {
         return mapper.map(offerClaim, OfferClaimResponseDto.class);
     }
 
-    // ✅ Get all claims made by a user
+
+
     @Override
     public List<OfferClaimResponseDto> getClaimsByUser(Long userId) {
         List<OfferClaim> claims = offerClaimRepository.findByUser_UserId(userId);
@@ -66,7 +68,7 @@ public class OfferClaimServiceImpl implements OfferClaimService {
                 .collect(Collectors.toList());
     }
 
-    // ✅ Get all claims for a specific offer
+
     @Override
     public List<OfferClaimResponseDto> getClaimsByOffer(Long offerId) {
         List<OfferClaim> claims = offerClaimRepository.findByOffer_OfferId(offerId);
@@ -75,7 +77,7 @@ public class OfferClaimServiceImpl implements OfferClaimService {
                 .collect(Collectors.toList());
     }
 
-    // ✅ Get claim by ID
+
     @Override
     public OfferClaimResponseDto getClaimById(Long claimId) {
         OfferClaim claim = offerClaimRepository.findById(claimId)
