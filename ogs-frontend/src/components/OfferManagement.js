@@ -143,7 +143,7 @@ function OfferManagement() {
               onChange={(e) => setOfferForm({...offerForm, discountType: e.target.value})}
             >
               <option value="PERCENTAGE">Percentage</option>
-              <option value="FIXED">Fixed Amount</option>
+              <option value="FLAT">FLAT</option>
             </select>
             <button type="submit" disabled={loading}>Create Offer</button>
           </form>
