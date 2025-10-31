@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OfferClaimRepository extends JpaRepository<OfferClaim,Long> {
-    boolean existsByUserAndOffer(User user, Offer offer);
+
 
 
     Optional<OfferClaim> findByUserAndOffer(User user, Offer offer);
@@ -19,4 +19,5 @@ public interface OfferClaimRepository extends JpaRepository<OfferClaim,Long> {
 
 
     List<OfferClaim> findByOffer_OfferId(Long offerId);
+    boolean existsByUserAndOffer(User user, Offer offer);
 }
