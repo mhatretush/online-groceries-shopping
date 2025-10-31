@@ -34,4 +34,10 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(cartService.viewCart(userId));
     }
+
+    @PostMapping("/applyDiscount")
+    public ResponseEntity<?> applyDiscount(Long userId, String offerCode){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(cartService.applyDiscount(userId,offerCode));
+    }
 }

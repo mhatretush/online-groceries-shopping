@@ -13,4 +13,10 @@ public class CartResponseDto {
     private List<CartItemResponseDto> items;
 
     private Double totalAmount;
+
+    //Discount
+    private boolean discountApplied;
+    private double discountAmount;
+    private double finalAmount;
+    private String offerCode;
 }

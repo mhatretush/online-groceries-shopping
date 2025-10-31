@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-
 @SpringBootApplication
 @EnableCaching
 public class ShoppingApplication {
@@ -26,8 +25,6 @@ public class ShoppingApplication {
         mapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT)
                 .setPropertyCondition(Conditions.isNotNull());
-
-
         return mapper;
     }// modelMapper() ends
 
