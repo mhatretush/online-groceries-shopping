@@ -24,7 +24,7 @@ public class OfferClaim {
     @JoinColumn(name="userId",nullable = false)
     private User user;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="offerId", nullable = false)
     private Offer offer;
 
