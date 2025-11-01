@@ -55,8 +55,66 @@ services:
     networks:
       - ogs-network
 
+    # MySQL Exporter (converts MySQL metrics to Prometheus format)
+  mysql-exporter:
+    image: prom/mysqld-exporter:latest
+    container_name: ogs-mysql-exporter
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "9104:9104"
+    depends_on:
+      - mysql
+    networks:
+      - ogs-network
+    command:
+      - "--config.my-cnf=/etc/mysql/my.cnf"
+    volumes:
+      - ./prometheus/my.cnf:/etc/mysql/my.cnf
+    restart: on-failure
+
+  # Prometheus (metrics database)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: ogs-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=7d'  # Keep data for 7 days
+    networks:
+      - ogs-network
+    depends_on:
+      - backend
+      - mysql-exporter
+    restart: on-failure
+
+  # Grafana (visualization)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: ogs-grafana
+    ports:
+      - "3001:3000"  # Changed from 3000 (frontend uses it)
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_SECURITY_ADMIN_USER: admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - ogs-network
+    depends_on:
+      - prometheus
+    restart: on-failure
+
+
 volumes:
   mysql-data:
+  prometheus-data:
+  grafana-data:
 
 networks:
   ogs-network:
