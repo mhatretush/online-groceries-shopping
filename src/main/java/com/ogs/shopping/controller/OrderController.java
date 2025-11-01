@@ -1,7 +1,9 @@
 package com.ogs.shopping.controller;
 
 import com.ogs.shopping.dto.request.AddToCartDto;
+import com.ogs.shopping.dto.response.ApiResponse;
 import com.ogs.shopping.dto.response.OrderResponseDto;
+import com.ogs.shopping.entity.OrderStatus;
 import com.ogs.shopping.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -37,4 +39,13 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(orderService.getUserOrders(userId));
     }
+
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<?> updateOrderStatus(
+            @PathVariable Long orderId,
+            @RequestParam OrderStatus newStatus) {
+        return  ResponseEntity.status(HttpStatus.OK)
+                .body(orderService.updateOrderStatus(orderId, newStatus));
+    }
+
 }
