@@ -18,7 +18,7 @@ pipeline {
         stage('Build Backend') {
             steps {
                 echo '========== STAGE 2A: Building Spring Boot Backend =========='
-                bat 'mvn clean package -DskipTests'
+                bat '.\\mvnw clean package -DskipTests'
                 echo 'Backend build completed successfully!'
             }
         }
@@ -27,8 +27,8 @@ pipeline {
             steps {
                 echo '========== STAGE 2B: Building React Frontend =========='
                 dir('ogs-frontend') {
-                    bat 'npm install --legacy-peer-deps'
-                    bat 'npm run build'
+                    bat '"C:\\Program Files\\nodejs\\npm.cmd" install --legacy-peer-deps'
+                    bat '"C:\\Program Files\\nodejs\\npm.cmd" run build'
                 }
                 echo 'Frontend build completed successfully!'
             }
@@ -40,7 +40,7 @@ pipeline {
                 bat 'docker build -f Dockerfile -t online-groceries-shopping:backend-%BUILD_NUMBER% --target production .'
                 echo 'Backend Docker image built: online-groceries-shopping:backend-%BUILD_NUMBER%'
                 
-                bat 'docker build -f ogs-frontend/Dockerfile -t online-groceries-shopping:frontend-%BUILD_NUMBER% --target production ./ogs-frontend'
+                bat 'docker build -f ogs-frontend\\Dockerfile -t online-groceries-shopping:frontend-%BUILD_NUMBER% --target production .\\ogs-frontend'
                 echo 'Frontend Docker image built: online-groceries-shopping:frontend-%BUILD_NUMBER%'
             }
         }
@@ -49,11 +49,11 @@ pipeline {
             steps {
                 echo '========== STAGE 4: Running Automated Tests =========='
                 
-                bat 'mvn test'
+                bat '.\\mvnw test'
                 
                 dir('ogs-frontend') {
                     catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                        bat 'npm test -- --watchAll=false'
+                        bat '"C:\\Program Files\\nodejs\\npm.cmd" test -- --watchAll=false'
                     }
                 }
                 
