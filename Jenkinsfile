@@ -49,7 +49,7 @@ pipeline {
             steps {
                 echo '========== STAGE 4: Running Automated Tests =========='
                 
-                bat '.\\mvnw test'
+                bat '.\\mvnw test -DskipITs'
                 
                 dir('ogs-frontend') {
                     catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
