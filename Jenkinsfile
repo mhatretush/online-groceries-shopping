@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_HOST = 'unix:///var/run/docker.sock'
-    }
-
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
         timeout(time: 30, unit: 'MINUTES')
@@ -22,7 +18,7 @@ pipeline {
         stage('Build Backend') {
             steps {
                 echo '========== STAGE 2A: Building Spring Boot Backend =========='
-                sh 'mvn clean package -DskipTests'
+                bat 'mvn clean package -DskipTests'
                 echo 'Backend build completed successfully!'
             }
         }
@@ -31,8 +27,8 @@ pipeline {
             steps {
                 echo '========== STAGE 2B: Building React Frontend =========='
                 dir('ogs-frontend') {
-                    sh 'npm install --legacy-peer-deps'
-                    sh 'npm run build'
+                    bat 'npm install --legacy-peer-deps'
+                    bat 'npm run build'
                 }
                 echo 'Frontend build completed successfully!'
             }
@@ -41,11 +37,11 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 echo '========== STAGE 3: Building Docker Images =========='
-                sh 'docker build -f Dockerfile -t online-groceries-shopping:backend-${BUILD_NUMBER} --target production .'
-                echo 'Backend Docker image built: online-groceries-shopping:backend-${BUILD_NUMBER}'
+                bat 'docker build -f Dockerfile -t online-groceries-shopping:backend-%BUILD_NUMBER% --target production .'
+                echo 'Backend Docker image built: online-groceries-shopping:backend-%BUILD_NUMBER%'
                 
-                sh 'docker build -f ogs-frontend/Dockerfile -t online-groceries-shopping:frontend-${BUILD_NUMBER} --target production ./ogs-frontend'
-                echo 'Frontend Docker image built: online-groceries-shopping:frontend-${BUILD_NUMBER}'
+                bat 'docker build -f ogs-frontend/Dockerfile -t online-groceries-shopping:frontend-%BUILD_NUMBER% --target production ./ogs-frontend'
+                echo 'Frontend Docker image built: online-groceries-shopping:frontend-%BUILD_NUMBER%'
             }
         }
 
@@ -53,11 +49,11 @@ pipeline {
             steps {
                 echo '========== STAGE 4: Running Automated Tests =========='
                 
-                sh 'mvn test'
+                bat 'mvn test'
                 
                 dir('ogs-frontend') {
                     catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                        sh 'npm test -- --watchAll=false'
+                        bat 'npm test -- --watchAll=false'
                     }
                 }
                 
@@ -69,8 +65,8 @@ pipeline {
     post {
         success {
             echo '✅ Pipeline succeeded! All stages completed.'
-            echo "Backend Image: online-groceries-shopping:backend-${BUILD_NUMBER}"
-            echo "Frontend Image: online-groceries-shopping:frontend-${BUILD_NUMBER}"
+            echo "Backend Image: online-groceries-shopping:backend-%BUILD_NUMBER%"
+            echo "Frontend Image: online-groceries-shopping:frontend-%BUILD_NUMBER%"
         }
         failure {
             echo '❌ Pipeline failed! Check logs above for details.'
