@@ -1,6 +1,7 @@
 package com.ogs.shopping.controller;
 
 import com.ogs.shopping.dto.request.AddToCartDto;
+import com.ogs.shopping.dto.request.DiscountRequestDto;
 import com.ogs.shopping.entity.Cart;
 import com.ogs.shopping.service.CartService;
 import jakarta.validation.Valid;
@@ -41,8 +42,9 @@ public class CartController {
 
     @PreAuthorize("hasRole('CUSTOMER')")
     @PostMapping("/applyDiscount")
-    public ResponseEntity<?> applyDiscount(Long userId, String offerCode){
+    public ResponseEntity<?> applyDiscount(@RequestBody DiscountRequestDto request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(cartService.applyDiscount(userId,offerCode));
+                .body(cartService.applyDiscount(request.getUserId(), request.getOfferCode()));
     }
+
 }

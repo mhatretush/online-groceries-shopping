@@ -12,6 +12,7 @@ import com.ogs.shopping.service.PublicHolidayService;
 import com.ogs.shopping.utils.OrderMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -135,6 +136,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Cacheable(value="orders", key="#p0")
     public OrderResponseDto viewOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(()->{
