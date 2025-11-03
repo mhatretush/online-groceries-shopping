@@ -15,6 +15,9 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Runtime stage
+FROM eclipse-temurin:21-jdk-alpine AS production
+
+# Runtime stage
 FROM eclipse-temurin:21-jdk-alpine
 
 WORKDIR /app
