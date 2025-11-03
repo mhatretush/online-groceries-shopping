@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class ProductController {
     private final ProductServiceImpl productService;
 
     // add product
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ApiResponse<ProductResponseDto>> addProduct(@Valid @RequestBody AddProductDto newProduct) {
         ProductResponseDto productResponseDto = productService.addProduct(newProduct);
@@ -30,6 +32,7 @@ public class ProductController {
     }// addProduct() ends
 
     // update product
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{productId}")
     public ResponseEntity<ApiResponse<ProductResponseDto>> updateProduct(@Valid @PathVariable Long productId, AddProductDto productDto) {
         ProductResponseDto productResponseDto = productService.updateProduct(productId,productDto);
@@ -37,6 +40,7 @@ public class ProductController {
     }// updateProduct() ends
 
     // delete product
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{productId}")
     public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable Long productId) {
         productService.deleteProduct(productId);
@@ -44,6 +48,7 @@ public class ProductController {
     }// deleteProduct() ends
 
     // find product by id
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{productId}")
     public ResponseEntity<ApiResponse<ProductResponseDto>> getProductById(@PathVariable Long productId) {
         ProductResponseDto productResponseDto = productService.findProductById(productId);
@@ -67,6 +72,7 @@ public class ProductController {
     }// getProductById() ends
 
     // list all products
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<ApiResponse<List<ProductResponseDto>>> getAllProducts() {
         List<ProductResponseDto> productResponseDtos = productService.getAllProducts();
