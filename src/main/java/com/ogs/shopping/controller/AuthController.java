@@ -33,7 +33,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDto loginRequest) {
 
-        // 1️⃣ Authenticate credentials
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),
@@ -41,15 +40,12 @@ public class AuthController {
                 )
         );
 
-        // 2️⃣ Load user details for JWT
         final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getEmail());
         final String token = jwtService.generateToken(userDetails);
 
-        // 3️⃣ Fetch domain user from DB
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // 4️⃣ Build detailed response
         AuthRespDto response = new AuthRespDto(
                 user.getUserId(),
                 token,

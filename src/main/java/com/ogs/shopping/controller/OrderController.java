@@ -1,6 +1,7 @@
 package com.ogs.shopping.controller;
 
 import com.ogs.shopping.dto.request.AddToCartDto;
+import com.ogs.shopping.dto.request.PlaceOrderRequestDto;
 import com.ogs.shopping.dto.response.ApiResponse;
 import com.ogs.shopping.dto.response.OrderResponseDto;
 import com.ogs.shopping.entity.OrderStatus;
@@ -19,14 +20,14 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     private OrderService orderService;
 
-    @PostMapping("/place/{userId}")
-    public ResponseEntity<?> placeOrder(@PathVariable Long userId, String offerCode) {
+    @PostMapping("/place")
+    public ResponseEntity<?> placeOrder(@RequestBody PlaceOrderRequestDto request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(orderService.placeOrder(userId, offerCode));
+                .body(orderService.placeOrder(request.getUserId(), request.getOfferCode()));
     }
 
     @GetMapping("/view/{orderId}")
-    public ResponseEntity<?> viewOrder(Long orderId) {
+    public ResponseEntity<?> viewOrder(@PathVariable Long orderId) {
 
         OrderResponseDto orderResponseDto = orderService.viewOrder(orderId);
 

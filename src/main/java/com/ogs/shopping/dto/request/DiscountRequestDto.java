@@ -2,15 +2,12 @@ package com.ogs.shopping.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
-public class OrderRequestDto {
+public class DiscountRequestDto {
     private Long userId;
-    private String paymentMethod;
-    private String shippingAddress;
+    private String offerCode;
 }
