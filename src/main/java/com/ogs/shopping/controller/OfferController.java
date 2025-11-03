@@ -7,6 +7,7 @@ import com.ogs.shopping.service.OfferService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Method;
@@ -18,12 +19,14 @@ import java.lang.reflect.Method;
 public class OfferController {
     private final OfferService offerService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<OfferResponseDto> createOffer(@RequestBody OfferRequestDto dto) {
         OfferResponseDto createOffer = offerService.createOffer(dto);
         return ResponseEntity.ok(createOffer);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<OfferResponseDto> getOfferById(@PathVariable Long id ){
         OfferResponseDto offer=offerService.getOfferById(id);
@@ -31,18 +34,21 @@ public class OfferController {
         return ResponseEntity.ok(offer);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{offerId}")
     public ResponseEntity<OfferResponseDto> updteOffer(@PathVariable Long offerId, @RequestBody OfferRequestDto dto){
         OfferResponseDto offer=offerService.updateOffer(offerId,dto);
         return ResponseEntity.ok(offer);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{offerId}")
     public ResponseEntity<String> deleteOffer(@PathVariable Long offerId){
         offerService.deleteOffer(offerId);
         return ResponseEntity.ok("the offer has been deleted successfully");
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/validate/{code}")
     public ResponseEntity<Boolean> isOfferValid(@PathVariable String code){
        boolean valid =offerService.isOfferValid(code);
