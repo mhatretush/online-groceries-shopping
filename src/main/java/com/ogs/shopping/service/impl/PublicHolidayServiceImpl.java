@@ -8,6 +8,10 @@ import com.ogs.shopping.repository.PublicHolidayRepository;
 import com.ogs.shopping.service.PublicHolidayService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,11 +36,20 @@ public class PublicHolidayServiceImpl implements PublicHolidayService {
 
 }
     @Override
-    public List<PublicHolidayResponseDto> getAllHolidays() {
-        return publicHolidayRepository.findAll().stream()
-                .map(holiday->{
-                    return modelMapper.map(holiday,PublicHolidayResponseDto.class);
-                }).toList();
+    public List<PublicHolidayResponseDto> getAllHolidays(int pageNumber, int pageSize) {
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<PublicHoliday> holidayPage = publicHolidayRepository.findAll(pageable);
+
+        return holidayPage.getContent().stream().map(
+                holiday->modelMapper.map(holiday, PublicHolidayResponseDto.class))
+                .toList();
+
+//        return publicHolidayRepository.findAll().stream()
+//                .map(holiday->{
+//                    return modelMappe
+//                    r.map(holiday,PublicHolidayResponseDto.class);
+//                }).toList();
     }
 
     @Override

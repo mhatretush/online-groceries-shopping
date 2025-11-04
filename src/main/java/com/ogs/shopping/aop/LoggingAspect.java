@@ -25,6 +25,4 @@ public Object logBeforeAddProduct(ProceedingJoinPoint joinPoint) throws Throwabl
     System.out.println("Aspect after add product");
     return returnValue;
 }
-
-
 }

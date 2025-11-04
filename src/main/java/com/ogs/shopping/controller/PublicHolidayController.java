@@ -12,7 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/holidays")
+@RequestMapping("/holidays")
 @AllArgsConstructor
 @Validated
 public class PublicHolidayController {
@@ -28,9 +28,12 @@ public class PublicHolidayController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<?> getAllHolidays() {
+    public ResponseEntity<?> getAllHolidays(
+            @RequestParam(defaultValue = "0")int page,
+            @RequestParam(defaultValue = "2") int size
+    ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(publicHolidayService.getAllHolidays());
+                .body(publicHolidayService.getAllHolidays(page, size));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
