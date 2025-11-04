@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface PublicHolidayService {
     PublicHolidayResponseDto addHoliday(PublicHolidayRequestDto holidayDto);
-    List<PublicHolidayResponseDto> getAllHolidays();
+    List<PublicHolidayResponseDto> getAllHolidays(int pageNumber, int pageSize);
     ApiException deleteHoliday(Long id);
     boolean isPublicHoliday(LocalDate date);
 }
