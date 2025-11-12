@@ -6,6 +6,7 @@ import com.ogs.shopping.payload.ApiResponse;
 import com.ogs.shopping.service.impl.ProductServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/product")
 @RequiredArgsConstructor
+@Slf4j
 public class ProductController {
 
     private final ProductServiceImpl productService;
@@ -35,6 +37,8 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{productId}")
     public ResponseEntity<ApiResponse<ProductResponseDto>> updateProduct(@Valid @PathVariable Long productId, AddProductDto productDto) {
+        log.info("Update product with id {}", productId);
+        
         ProductResponseDto productResponseDto = productService.updateProduct(productId,productDto);
         return ResponseEntity.ok(ApiResponse.success("Product updated successfully",productResponseDto));
     }// updateProduct() ends
@@ -43,6 +47,7 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{productId}")
     public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable Long productId) {
+        log.info("Delete product with id:{}",productId);
         productService.deleteProduct(productId);
         return ResponseEntity.ok(ApiResponse.success("Product deleted successfully",null));
     }// deleteProduct() ends
@@ -51,6 +56,7 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{productId}")
     public ResponseEntity<ApiResponse<ProductResponseDto>> getProductById(@PathVariable Long productId) {
+        log.debug("REST request to get product : {}", productId);
         ProductResponseDto productResponseDto = productService.findProductById(productId);
 
         // add HATEOAS links
@@ -75,7 +81,9 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<ApiResponse<List<ProductResponseDto>>> getAllProducts() {
+        log.debug("REST request to get all products");
         List<ProductResponseDto> productResponseDtos = productService.getAllProducts();
+        log.info("Fetched {} products ", productResponseDtos.size());
         return ResponseEntity.ok(ApiResponse.success("Product list fetched successfully",productResponseDtos));
     }// getAllProducts() ends
 
