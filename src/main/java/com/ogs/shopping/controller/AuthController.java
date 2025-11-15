@@ -2,7 +2,6 @@ package com.ogs.shopping.controller;
 
 import com.ogs.shopping.dto.request.UserLoginDto;
 import com.ogs.shopping.dto.response.AuthRespDto;
-import com.ogs.shopping.entity.Role;
 import com.ogs.shopping.entity.User;
 import com.ogs.shopping.repository.UserRepository;
 import com.ogs.shopping.security.jwt.JwtService;
@@ -12,13 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 @RestController
 @RequestMapping("/auth")

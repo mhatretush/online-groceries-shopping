@@ -9,6 +9,7 @@ import com.ogs.shopping.entity.*;
 import com.ogs.shopping.repository.*;
 import com.ogs.shopping.service.OrderService;
 import com.ogs.shopping.service.PublicHolidayService;
+import com.ogs.shopping.service.RestrictedDayService;
 import com.ogs.shopping.utils.OrderMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -34,6 +35,7 @@ public class OrderServiceImpl implements OrderService {
     private final OfferRepository offerRepository;
     private final OfferClaimRepository offerClaimRepository;
     private final ProductRepository productRepository;
+    private final RestrictedDayService  restrictedDayService;
 
     @Override
     public OrderResponseDto placeOrder(Long userId, String offerCode) {
@@ -50,8 +52,8 @@ public class OrderServiceImpl implements OrderService {
 
         LocalDate today = LocalDate.now();
 
-        if (today.getDayOfWeek() == DayOfWeek.SUNDAY || publicHolidayService.isPublicHoliday(today)) {
-            throw new ApiException("Orders cannot be placed on Sunday and on public holidays");
+        if (restrictedDayService.isRestrictedDay(today) || publicHolidayService.isPublicHoliday(today)) {
+            throw new ApiException("Orders cannot be placed on restricted days or public holidays");
         }
 
         double totalAmount = cart.getItems().stream()

@@ -45,12 +45,12 @@ public class PublicHolidayServiceImpl implements PublicHolidayService {
                 holiday->modelMapper.map(holiday, PublicHolidayResponseDto.class))
                 .toList();
 
+    }
 //        return publicHolidayRepository.findAll().stream()
 //                .map(holiday->{
 //                    return modelMappe
 //                    r.map(holiday,PublicHolidayResponseDto.class);
 //                }).toList();
-    }
 
     @Override
     public ApiException deleteHoliday(Long id) {

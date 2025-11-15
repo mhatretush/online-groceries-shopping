@@ -59,7 +59,8 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/index.html",
-                                "/webjars/**"
+                                "/webjars/**",
+                                "/excel-sheet"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

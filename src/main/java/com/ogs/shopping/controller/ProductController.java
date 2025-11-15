@@ -72,12 +72,12 @@ public class ProductController {
     }// getProductById() ends
 
     // list all products
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<ProductResponseDto>>> getAllProducts() {
-        List<ProductResponseDto> productResponseDtos = productService.getAllProducts();
-        return ResponseEntity.ok(ApiResponse.success("Product list fetched successfully",productResponseDtos));
-    }// getAllProducts() ends
+        @PreAuthorize("hasRole('ADMIN')")
+        @GetMapping
+        public ResponseEntity<ApiResponse<List<ProductResponseDto>>> getAllProducts() {
+            List<ProductResponseDto> productResponseDtos = productService.getAllProducts();
+            return ResponseEntity.ok(ApiResponse.success("Product list fetched successfully",productResponseDtos));
+        }// getAllProducts() ends
 
 
 }// ProductController class ends
