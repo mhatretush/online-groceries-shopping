@@ -36,6 +36,7 @@ public class OrderServiceImpl implements OrderService {
     private final OfferClaimRepository offerClaimRepository;
     private final ProductRepository productRepository;
     private final RestrictedDayService  restrictedDayService;
+    private final OrderPriceLimitService orderPriceLimitService;
 
     @Override
     public OrderResponseDto placeOrder(Long userId, String offerCode) {
@@ -60,11 +61,11 @@ public class OrderServiceImpl implements OrderService {
                 .mapToDouble(i -> i.getProduct().getProductPrice() * i.getQuantity())
                 .sum();
 
-        if (totalAmount < 99) {
-            throw new ApiException("Minimum order amount must be ₹99 or more.");
-        }
-        if (totalAmount > 4999) {
-            throw new ApiException("Maximum order amount cannot exceed ₹4999.");
+        double minLimit = orderPriceLimitService.getLimit(LimitType.MIN);
+        double maxLimit = orderPriceLimitService.getLimit(LimitType.MAX);
+
+        if (totalAmount < minLimit || totalAmount > maxLimit) {
+            throw new ApiException("Minimum order amount must be "+minLimit+"or more.");
         }
 
         double discountAmount = 0.0;
