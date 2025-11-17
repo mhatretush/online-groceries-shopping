@@ -24,6 +24,6 @@ public class PublicHoliday {
     private LocalDate date;
 
     @Column(nullable = false)
-    private String name; // e.g., "Diwali", "Independence Day"
+    private String name;
 }
 

@@ -4,7 +4,6 @@ import com.ogs.shopping.custom_exception.ApiException;
 import com.ogs.shopping.custom_exception.ResourceNotFoundException;
 import com.ogs.shopping.dto.request.AddToCartDto;
 import com.ogs.shopping.dto.response.ApiResponse;
-import com.ogs.shopping.dto.response.CartItemResponseDto;
 import com.ogs.shopping.dto.response.CartResponseDto;
 import com.ogs.shopping.entity.*;
 import com.ogs.shopping.repository.*;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
+
 
 @Service
 @Transactional
@@ -94,7 +93,7 @@ public class CartServiceImpl implements CartService {
 
         CartResponseDto response =  cartMapper.toCartResponseDto(cart);
 
-        return  new ApiResponse("success");
+        return new ApiResponse("success");
     }
 
     @Override
@@ -105,7 +104,6 @@ public class CartServiceImpl implements CartService {
         Cart cart = cartRepository.findByUser(user)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
         return  cartMapper.toCartResponseDto(cart);
-
     }
 
     @Override
