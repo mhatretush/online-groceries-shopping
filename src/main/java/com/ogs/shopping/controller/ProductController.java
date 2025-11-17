@@ -87,5 +87,4 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success("Product list fetched successfully",productResponseDtos));
     }// getAllProducts() ends
 
-
 }// ProductController class ends

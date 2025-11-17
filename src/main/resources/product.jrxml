@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN"
+        "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+              http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="product_report" pageWidth="595" pageHeight="842" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
+              uuid="12345678-1234-1234-1234-123456789000">
+
+    <!-- SQL QUERY (Database Fetch) -->
+    <queryString><![CDATA[
+        SELECT
+            product_id,
+            product_name,
+            product_price,
+            product_qty,
+            created_date_time,
+            modified_date_time
+        FROM product
+    ]]></queryString>
+
+    <field name="productId" class="java.lang.Long"/>
+    <field name="productName" class="java.lang.String"/>
+    <field name="productPrice" class="java.lang.Double"/>
+    <field name="productQty" class="java.lang.Integer"/>
+    <field name="createdDateTime" class="java.time.LocalDateTime"/>
+    <field name="modifiedDateTime" class="java.time.LocalDateTime"/>
+
+    <!-- TITLE -->
+    <title>
+        <band height="60">
+            <staticText>
+                <reportElement x="0" y="10" width="400" height="30"/>
+                <text><![CDATA[PRODUCT REPORT]]></text>
+            </staticText>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="25">
+
+            <staticText>
+                <reportElement x="0" y="5" width="70" height="20"/>
+                <text><![CDATA[Product ID]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="80" y="5" width="120" height="20"/>
+                <text><![CDATA[Name]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="210" y="5" width="60" height="20"/>
+                <text><![CDATA[Price]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="280" y="5" width="60" height="20"/>
+                <text><![CDATA[Qty]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="350" y="5" width="100" height="20"/>
+                <text><![CDATA[Created Date]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="460" y="5" width="100" height="20"/>
+                <text><![CDATA[Modified Date]]></text>
+            </staticText>
+
+        </band>
+    </columnHeader>
+
+    <!-- DETAIL ROW (Actual DB Data) -->
+    <detail>
+        <band height="25">
+
+            <textField>
+                <reportElement x="0" y="5" width="70" height="20"/>
+                <textFieldExpression><![CDATA[$F{productId}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="80" y="5" width="120" height="20"/>
+                <textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="210" y="5" width="60" height="20"/>
+                <textFieldExpression><![CDATA[$F{productPrice}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="280" y="5" width="60" height="20"/>
+                <textFieldExpression><![CDATA[$F{productQty}]]></textFieldExpression>
+            </textField>
+
+            <textField pattern="dd-MM-yyyy HH:mm">
+                <reportElement x="350" y="5" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{createdDateTime}]]></textFieldExpression>
+            </textField>
+
+            <textField pattern="dd-MM-yyyy HH:mm">
+                <reportElement x="460" y="5" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{modifiedDateTime}]]></textFieldExpression>
+            </textField>
+
+        </band>
+    </detail>
+
+</jasperReport>

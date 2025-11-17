@@ -28,9 +28,9 @@ public class PublicHolidayServiceImpl implements PublicHolidayService {
     @Override
     public PublicHolidayResponseDto addHoliday(PublicHolidayRequestDto holidayDto) {
         if (publicHolidayRepository.existsByDate(holidayDto.getDate())) {
-            throw new ApiException("Holiday already exists");
-        }
-        PublicHoliday holiday = modelMapper.map(holidayDto, PublicHoliday.class);
+        throw new ApiException("Holiday already exists");
+    }
+    PublicHoliday holiday = modelMapper.map(holidayDto, PublicHoliday.class);
         publicHolidayRepository.save(holiday);
         return modelMapper.map(holiday, PublicHolidayResponseDto.class);
 
@@ -45,12 +45,12 @@ public class PublicHolidayServiceImpl implements PublicHolidayService {
                 holiday->modelMapper.map(holiday, PublicHolidayResponseDto.class))
                 .toList();
 
+    }
 //        return publicHolidayRepository.findAll().stream()
 //                .map(holiday->{
 //                    return modelMappe
 //                    r.map(holiday,PublicHolidayResponseDto.class);
 //                }).toList();
-    }
 
     @Override
     public ApiException deleteHoliday(Long id) {
