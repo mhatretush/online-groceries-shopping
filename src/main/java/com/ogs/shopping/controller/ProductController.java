@@ -38,7 +38,7 @@ public class ProductController {
     @PutMapping("/{productId}")
     public ResponseEntity<ApiResponse<ProductResponseDto>> updateProduct(@Valid @PathVariable Long productId, AddProductDto productDto) {
         log.info("Update product with id {}", productId);
-        
+
         ProductResponseDto productResponseDto = productService.updateProduct(productId,productDto);
         return ResponseEntity.ok(ApiResponse.success("Product updated successfully",productResponseDto));
     }// updateProduct() ends
